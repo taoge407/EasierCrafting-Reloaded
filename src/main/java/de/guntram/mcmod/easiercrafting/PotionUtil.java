@@ -10,6 +10,10 @@ import net.minecraft.registry.entry.RegistryEntry;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author taoge407
+ * FUCKING mojang, removing ALL PotionUtil to reconstructing their fucking potion system, leading to restoring a new util class to implement some offenly used method
+ */
 public class PotionUtil {
     public static Potion getPotion(ItemStack itemStack) {
         return itemStack.get(DataComponentTypes.POTION_CONTENTS).potion().get().value();

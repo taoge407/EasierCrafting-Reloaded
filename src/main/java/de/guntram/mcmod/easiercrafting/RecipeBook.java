@@ -210,17 +210,31 @@ public class RecipeBook {
         minYtoDraw = ypos;
         ypos -= mouseScroll * itemSize;
         ypos = drawRecipeOutputs(context, patternMatchingRecipes, fontRenderer, 0, ypos, mouseX, mouseY);
-        if (underMouse != null)
+        if (underMouse != null) {
             underMouseIsCraftable = false;
-
-        for (String category : craftableCategories.keySet()) {
-//            System.out.println(category+" at "+xOffset+"/"+ypos);
-            if (ypos >= minYtoDraw) {
-                context.drawText(fontRenderer, category, xOffset, ypos, 0xffff00, true);
+            if (craftableCategories.keySet() != null) {
+                for (String category : craftableCategories.keySet()) {
+    //            System.out.println(category+" at "+xOffset+"/"+ypos);
+                    if (ypos >= minYtoDraw) {
+                        context.drawText(fontRenderer, category, xOffset, ypos, 0xffff00, true);
+                    }
+                    ypos += itemSize;
+                    ypos = drawRecipeOutputs(context, craftableCategories.get(category), fontRenderer, 0, ypos, mouseX, mouseY);
+                }
             }
-            ypos += itemSize;
-            ypos = drawRecipeOutputs(context, craftableCategories.get(category), fontRenderer, 0, ypos, mouseX, mouseY);
+        } else {
+            if (craftableCategories.keySet() != null) {
+                for (String category : craftableCategories.keySet()) {
+    //            System.out.println(category+" at "+xOffset+"/"+ypos);
+                    if (ypos >= minYtoDraw) {
+                        context.drawText(fontRenderer, category, xOffset, ypos, 0xffff00, true);
+                    }
+                    ypos += itemSize;
+                    ypos = drawRecipeOutputs(context, craftableCategories.get(category), fontRenderer, 0, ypos, mouseX, mouseY);
+                }
+            }
         }
+
         if (underMouse != null) {
             String displayName = EasierCrafting.recipeDisplayName(underMouse);
             context.drawText(fontRenderer, displayName, 0, height + 3, 0xffff00, true);

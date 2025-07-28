@@ -3,9 +3,10 @@ package de.guntram.mcmod.easiercrafting.Loom;
 import de.guntram.mcmod.easiercrafting.EasierCrafting;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.guntram.mcmod.easiercrafting.RecipeUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -16,10 +17,8 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
@@ -27,7 +26,8 @@ public class LoomRecipe implements Recipe {
     
     private List<LoomStep> steps;
     String name;
-    public final static RecipeType recipeType = RecipeType.register("easiercrafting:loom_recipe");
+//    public final static RecipeType recipeType = RecipeType.register("easiercrafting:loom_recipe");
+    public final static RecipeType<Recipe<?>> recipeType = RecipeUtil.register("easiercrafting", "loom_recipe");
 
     public LoomRecipe(String name) {
         this.name=name;

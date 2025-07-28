@@ -1,3 +1,11 @@
+# EasierCrafting Reloaded by taoge407
+> A very useful mod to craft rapidly, initially made by Giselbaer.
+
+Cause the original repo had stopped updating since 1.20.4, I've updated it to the Minecraft version 1.21.1
+
+[Click here to view the original repo.](https://github.com/gbl/EasierCrafting)
+
+Here's the original description below.
 # EasierCrafting
 
 This makes crafting easier by displaying a list of items you can craft using 

@@ -22,12 +22,13 @@ public class BrewingRecipe<C extends RecipeInput/* extends Inventory & RecipeInp
     private final boolean isPotionRecipe;
 //    public final static RecipeType recipeType = RecipeType.register("easiercrafting:brewing_recipe");
 static String[] id = { "easiercrafting", "brewing_recipe"};
-    public final static RecipeType<Recipe<?>> recipeType =
-        Registry.register(Registries.RECIPE_TYPE, Identifier.of(id[0], id[1]), new RecipeType<>() {
-    public String toString() {
-        return id[0] + ":" + id[1];
-    }
-});
+//    public final static RecipeType<Recipe<?>> recipeType =
+//        Registry.register(Registries.RECIPE_TYPE, Identifier.of(id[0], id[1]), new RecipeType<>() {
+//    public String toString() {
+//        return id[0] + ":" + id[1];
+//    }
+//});
+    public final static RecipeType<Recipe<?>> recipeType = RecipeUtil.register(id[0], id[1]);
     public BrewingRecipe(boolean isPotionRecipe, ItemStack inputPotion, ItemStack ingredient, ItemStack outputPotion) {
         this.isPotionRecipe = isPotionRecipe;
         this.inputPotion = inputPotion;

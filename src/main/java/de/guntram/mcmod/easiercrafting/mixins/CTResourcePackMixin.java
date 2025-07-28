@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.Overwrite;
 @Mixin(CTResourcePack.class)
 public class CTResourcePackMixin {
     /**
-     * @author tg
-     * @reason fuck mojang
+     * @author taoge407
+     * @reason fucking mojang, privatization the construction method of Identifier, using Identifier.of(namespace, path) instead.
      */
     @Overwrite()
     private static Identifier fromPath(String path)
