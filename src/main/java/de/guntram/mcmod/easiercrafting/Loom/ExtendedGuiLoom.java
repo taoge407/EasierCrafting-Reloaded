@@ -16,6 +16,7 @@ import net.minecraft.client.gui.screen.ingame.LoomScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.DyeItem;
@@ -169,15 +170,19 @@ public class ExtendedGuiLoom extends LoomScreen implements SlotClickAccepter {
         if (loomRecipeName.isEmpty()) {
             return;
         }
-        ItemStack banners = ((LoomScreenHandler)handler).getBannerSlot().getStack();
+        ItemStack banners = handler.getBannerSlot().getStack();
         if (!(banners.getItem() instanceof BannerItem)) {
             return;
         }
-        NbtCompound tag = banners.getSubNbt("BlockEntityTag");
-        if (tag == null) {
+//        NbtCompound tag = banners.getSubNbt("BlockEntityTag");
+//        if (tag == null) {
+//            return;
+//        }
+        NbtCompound compound = banners.get(DataComponentTypes.BLOCK_ENTITY_DATA).copyNbt();
+        if (compound == null) {
             return;
         }
-        NbtList patterns = tag.getList("Patterns", 10);
+        NbtList patterns = compound.getList("Patterns", 10);
         if (patterns == null) {
             return;
         }

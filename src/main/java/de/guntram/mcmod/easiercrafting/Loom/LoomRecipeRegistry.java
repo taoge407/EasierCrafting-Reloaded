@@ -8,12 +8,16 @@ package de.guntram.mcmod.easiercrafting.Loom;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import io.netty.util.internal.logging.Slf4JLoggerFactory;
+import net.fabricmc.loader.api.FabricLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -22,13 +26,13 @@ import org.apache.logging.log4j.Logger;
 public class LoomRecipeRegistry {
 
     private static LoomRecipeRegistry instance;
-    private static Logger LOGGER;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoomRecipeRegistry.class);
 
     private TreeMap<String, LoomRecipe> recipes;
     
     private LoomRecipeRegistry() {
         recipes = new TreeMap<>();
-        LOGGER = LogManager.getLogger();
+//        LOGGER = LogManager.getLogger();
     }
     
     public static LoomRecipeRegistry getInstance() {
@@ -39,9 +43,13 @@ public class LoomRecipeRegistry {
     }
     
     public static String getRecipeCollectionPath() {
-        File dir = new File("config"); dir.mkdirs();
-        dir = new File(dir, "loomrecipes"); dir.mkdirs();
-        return dir.getAbsolutePath();
+        Path dirr = FabricLoader.getInstance().getConfigDir();
+        Path recipePath = dirr.resolve("loomrecipes");
+        recipePath.toFile().mkdirs();
+        return recipePath.toAbsolutePath().toString();
+        // File dir = new File("config"); dir.mkdirs();
+        // dir = new File(dir, "loomrecipes"); dir.mkdirs();
+        // return dir.getAbsolutePath();
     }
     
     public static void registerRecipe(LoomRecipe recipe) {
@@ -50,12 +58,13 @@ public class LoomRecipeRegistry {
     
     public static void loadRecipeFile(String path) throws IOException, IllegalArgumentException {
         String content = new String(Files.readAllBytes(Paths.get(path)));
-        LoomRecipe recipe = LoomRecipe.fromSaveString(content);
+        LOGGER.warn("Fuck content {}", content);
+        LoomRecipe recipe = LoomRecipe.fromSaveString(content.split(":")[1]);
         registerRecipe(recipe);
     }
     
     public static void loadRecipeCollection(String path) {
-        for (String file: new File(path).list((dir, name) -> { return name.endsWith(".lr"); } )) {
+        for (String file: new File(path).list((dir, name) -> name.endsWith(".lr"))) {
             try {
                 loadRecipeFile(path + File.separatorChar + file);
                 LOGGER.info(file + " loaded");

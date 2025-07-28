@@ -23,6 +23,11 @@ public class EasierCrafting implements ClientModInitializer
 
     @Override
     public void onInitializeClient() {
+        try {
+            Class.forName(BrewingRecipe.class.getName());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         CrowdinTranslate.downloadTranslations(MODID);        
         ConfigurationHandler confHandler = ConfigurationHandler.getInstance();
         ConfigurationProvider.register("EasierCrafting", confHandler);

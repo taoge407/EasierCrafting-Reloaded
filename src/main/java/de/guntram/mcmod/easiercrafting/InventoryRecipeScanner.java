@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FireworksComponent;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,7 +21,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -26,6 +28,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.xml.crypto.Data;
 
 /**
  *
@@ -61,9 +65,9 @@ public class InventoryRecipeScanner {
             ItemStack stack=invitem.getStack();
             Item item = stack.getItem();
 
-            if (item.isDamageable()&& stack.isDamaged()) {
-                NbtList enchantments = stack.getEnchantments();
-                if (enchantments.size() <= ConfigurationHandler.getMaxEnchantsAllowedForRepair()) {
+            if (stack.isDamageable() && stack.isDamaged()) {
+                ItemEnchantmentsComponent enchantments = stack.getEnchantments();
+                if (enchantments.getSize() <= ConfigurationHandler.getMaxEnchantsAllowedForRepair()) {
                     Integer previous=hasRepairable.get(item);
                     hasRepairable.put(item, previous == null ? 1 : previous+1);
                 }
@@ -171,9 +175,10 @@ public class InventoryRecipeScanner {
             for (int power=1; power<=3; power++) {
                 if (availableGunPowder>=power) {
                     ItemStack resultItem = new ItemStack(Items.FIREWORK_ROCKET, 3);
-                    NbtCompound nbttagcompound = resultItem.getOrCreateSubNbt("Fireworks");
-                    nbttagcompound.putByte("Flight", (byte)power);
-                    resultItem.setCustomName(Text.literal("Strength "+power));
+                    FireworksComponent component = resultItem.get(DataComponentTypes.FIREWORKS);
+                    resultItem.set(DataComponentTypes.FIREWORKS, new FireworksComponent(power, component.explosions()));
+//                    nbttagcompound.putByte("Flight", (byte)power);
+                    resultItem.set(DataComponentTypes.CUSTOM_NAME, Text.literal("Strength "+power));
 
                     ItemStack[] gunPowder = new ItemStack[power];
                     for (int k=0; k<power; k++)

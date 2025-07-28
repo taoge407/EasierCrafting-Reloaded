@@ -1,24 +1,33 @@
 package de.guntram.mcmod.easiercrafting;
 
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-public class BrewingRecipe<C extends Inventory> implements Recipe<C> {
+import java.util.Arrays;
+
+public class BrewingRecipe<C extends RecipeInput/* extends Inventory & RecipeInput*/> implements Recipe<C> {
 
     private final ItemStack inputPotion, ingredient, outputPotion;
     private final boolean isPotionRecipe;
-    public final static RecipeType recipeType = RecipeType.register("easiercrafting:brewing_recipe");
-
+//    public final static RecipeType recipeType = RecipeType.register("easiercrafting:brewing_recipe");
+static String[] id = { "easiercrafting", "brewing_recipe"};
+    public final static RecipeType<Recipe<?>> recipeType =
+        Registry.register(Registries.RECIPE_TYPE, Identifier.of(id[0], id[1]), new RecipeType<>() {
+    public String toString() {
+        return id[0] + ":" + id[1];
+    }
+});
     public BrewingRecipe(boolean isPotionRecipe, ItemStack inputPotion, ItemStack ingredient, ItemStack outputPotion) {
         this.isPotionRecipe = isPotionRecipe;
         this.inputPotion = inputPotion;
@@ -32,7 +41,7 @@ public class BrewingRecipe<C extends Inventory> implements Recipe<C> {
     }
 
     @Override
-    public ItemStack craft(C inv, DynamicRegistryManager registryManager) {
+    public ItemStack craft(C input, RegistryWrapper.WrapperLookup lookup) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -42,7 +51,7 @@ public class BrewingRecipe<C extends Inventory> implements Recipe<C> {
     }
 
     @Override
-    public ItemStack getResult(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
         return outputPotion;
     }
 
@@ -90,13 +99,14 @@ public class BrewingRecipe<C extends Inventory> implements Recipe<C> {
         result.append(getCategory())
                 .append(": input ")
                 .append(inputPotion.getItem().getName().getString()) . append("/")
-                .append(PotionUtil.getPotion(inputPotion).finishTranslationKey(""))
+                .append(inputPotion.getItem().getTranslationKey())
                 .append(" with ingredient ")
                 .append(ingredient.getItem().getName().getString())
                 .append(" yields ")
                 .append(outputPotion.getItem().getName().getString()) . append("/")
-                .append(PotionUtil.getPotion(outputPotion).finishTranslationKey(""))
+                .append(outputPotion.getItem().getTranslationKey())
                 ;
         return result.toString();
     }
+
 }

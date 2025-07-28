@@ -6,7 +6,7 @@
     "client": [
 
     ],
-    "client-disabled": [
+    "server": [
         "ClickWindowC2SPacketDebugMixin"
     ],
     "injectors": {

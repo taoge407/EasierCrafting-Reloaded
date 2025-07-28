@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,6 +29,8 @@ import net.minecraft.screen.LoomScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
+import org.joml.Matrix4fStack;
 
 /**
  *
@@ -78,14 +81,14 @@ public class LoomRecipeBook extends RecipeBook {
     public void renderSingleRecipeOutput(DrawContext context, TextRenderer fontRenderer,
             ItemStack items, int x, int y) {
 
-        MatrixStack stack = RenderSystem.getModelViewStack();
-        stack.push();
+        Matrix4fStack stack = RenderSystem.getModelViewStack();
+        stack.pushMatrix();
         stack.scale(1.5f, 1.5f, 1.5f);
         RenderSystem.applyModelViewMatrix();
         
         context.drawItem(items, x*2/3, y*2/3);
         
-        stack.pop();
+        stack.popMatrix();
         RenderSystem.applyModelViewMatrix();
         
         context.drawItemInSlot(fontRenderer, items, x, y);
@@ -117,7 +120,9 @@ public class LoomRecipeBook extends RecipeBook {
                 @Override
                 public void runWithInfo(Integer i) {
                     LoomStep step = recipe.getStep(i);
-                    BannerPattern pattern = BannerPattern.byId(step.pattern).value();
+//                    BannerPattern pattern = BannerPattern.byId(step.pattern).value();
+                    // todo what the fuck is argument translation key
+                    BannerPattern pattern = new BannerPattern(Identifier.of(step.pattern), step.pattern);
                     if (pattern == null) {
                         LOGGER.warn("no BannerPattern found for "+step.pattern);
                         DelayedSlotClickQueue.clear();
@@ -140,9 +145,9 @@ public class LoomRecipeBook extends RecipeBook {
                         MinecraftClient.getInstance().interactionManager
                                 .clickButton((screen.getScreenHandler()).syncId, pattern.ordinal());// click loom button
                     } else */ {
-                        Item item = bannerPatternItemFromId(pattern.getId());
+                        Item item = bannerPatternItemFromId(pattern.assetId().getPath());
                         if (item == null) {
-                            LOGGER.warn("Don't know which pattern to use for "+pattern.getId());
+                            LOGGER.warn("Don't know which pattern to use for "+pattern.assetId().getPath());
                             DelayedSlotClickQueue.clear();
                             return;
                         }
@@ -203,7 +208,8 @@ public class LoomRecipeBook extends RecipeBook {
             if (slot.getStack().getItem() != blankBanner.getItem()) {
                 continue;
             }
-            NbtCompound cTag = slot.getStack().getOrCreateSubNbt("BlockEntityTag");
+//            NbtCompound cTag = slot.getStack().getOrCreateSubNbt("BlockEntityTag");
+            NbtCompound cTag = slot.getStack().get(DataComponentTypes.BLOCK_ENTITY_DATA).copyNbt();
             if (!cTag.contains("Patterns", 9)
             ||  cTag.getList("Patterns", 10).isEmpty()) {
                 return i+firstInventorySlotNo;

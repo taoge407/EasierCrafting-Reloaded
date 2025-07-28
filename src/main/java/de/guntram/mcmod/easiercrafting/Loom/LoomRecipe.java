@@ -4,6 +4,7 @@ import de.guntram.mcmod.easiercrafting.EasierCrafting;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,9 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -70,12 +73,12 @@ public class LoomRecipe implements Recipe {
     }
 
     @Override
-    public boolean matches(Inventory inv, World world) {
-        return true;
+    public boolean matches(RecipeInput input, World world) {
+        return false;
     }
 
     @Override
-    public ItemStack craft(Inventory inv, DynamicRegistryManager registryManager) {
+    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -85,13 +88,14 @@ public class LoomRecipe implements Recipe {
     }
 
     @Override
-    public ItemStack getResult(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup lookup) {
         if (MinecraftClient.getInstance().currentScreen instanceof ExtendedGuiLoom) {
             ExtendedGuiLoom screen = (ExtendedGuiLoom) MinecraftClient.getInstance().currentScreen;
             ItemStack bannerStack = screen.getBannerItemStack();
             // ItemStack bannerStack = new ItemStack(new WallBannerBlock(DyeColor.byId(screen.getColor(0)),
             //         Block.Settings.of(Material.WOOD)).asItem());
-            NbtCompound compoundTag = bannerStack.getOrCreateSubNbt("BlockEntityTag");
+//            NbtCompound compoundTag = bannerStack.getOrCreateSubNbt("BlockEntityTag");
+            NbtCompound compoundTag = bannerStack.get(DataComponentTypes.BLOCK_ENTITY_DATA).copyNbt();
             NbtList patterns;
             if (compoundTag.contains("Patterns", 9)) {
                patterns = compoundTag.getList("Patterns", 10);

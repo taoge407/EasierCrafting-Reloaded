@@ -15,8 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 // THIS IS DISABLED - it runs on the server, not the client. Only here for reference. Not referenced in mixin.json.
 
 public class BrewingStandCraftedMixin {
+    // todo
     @Inject(method="craft", at=@At("RETURN"))
-    private void updateRecipesWhenCrafted(CallbackInfo info) {
+    private static void updateRecipesWhenCrafted(CallbackInfo info) {
         LOGGER.info("brewing stand playing done sound");
         Screen screen = MinecraftClient.getInstance().currentScreen;
         if (screen != null && screen instanceof ExtendedGuiBrewingStand) {

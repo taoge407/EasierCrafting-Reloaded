@@ -2,7 +2,6 @@ package de.guntram.mcmod.easiercrafting;
 
 import java.util.Comparator;
 import java.util.TreeSet;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
